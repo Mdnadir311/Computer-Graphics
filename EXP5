@@ -1,0 +1,25 @@
+import matplotlib.pyplot as plt
+
+def draw_line_dda(x1, y1, x2, y2):
+    dx, dy = x2 - x1, y2 - y1
+    steps = max(abs(dx), abs(dy))
+    x_inc, y_inc = dx / steps, dy / steps
+    
+    x, y = x1, y1
+    x_coords, y_coords = [round(x)], [round(y)]
+    
+    for _ in range(steps):
+        x += x_inc
+        y += y_inc
+        x_coords.append(round(x))
+        y_coords.append(round(y))
+        
+    plt.plot(x_coords, y_coords, marker='o')
+    plt.title("DDA Line Drawing Algorithm")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.grid(True)
+    plt.show()
+
+
+draw_line_dda(2, 3, 10, 8)
