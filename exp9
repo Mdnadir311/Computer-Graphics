@@ -1,0 +1,27 @@
+import matplotlib.path as mpath, matplotlib.pyplot as plt
+
+L, R, B, T = 1, 2, 4, 8
+
+def code(x, y, w):
+    return (x < w[0]) * L | (x > w[2]) * R | (y < w[1]) * B | (y > w[3]) * T
+
+def clip(x1, y1, x2, y2, w):
+    c1, c2 = code(x1, y1, w), code(x2, y2, w)
+    while True:
+        if not (c1 | c2): return True, (x1, y1), (x2, y2)
+        if c1 & c2: return False, None, None
+        o = c1 or c2
+        if o & T:   x, y = x1 + (x2 - x1) * (w[3] - y1) / (y2 - y1), w[3]
+        elif o & B: x, y = x1 + (x2 - x1) * (w[1] - y1) / (y2 - y1), w[1]
+        elif o & R: x, y = w[2], y1 + (y2 - y1) * (w[2] - x1) / (x2 - x1)
+        else:       x, y = w[0], y1 + (y2 - y1) * (w[0] - x1) / (x2 - x1)
+        if o == c1: x1, y1, c1 = x, y, code(x, y, w)
+        else:       x2, y2, c2 = x, y, code(x, y, w)
+
+
+win = (10, 10, 100, 100)
+ok, p1, p2 = clip(0, 0, 120, 120, win)
+if ok:
+    plt.gca().add_patch(plt.Rectangle((win[0], win[1]), win[2]-win[0], win[3]-win[1], fill=False, color='r'))
+    plt.plot([0, 120], [0, 120], 'g--', [p1[0], p2[0]], [p1[1], p2[1]], 'b-')
+    plt.show()
