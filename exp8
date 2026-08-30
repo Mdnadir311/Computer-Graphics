@@ -1,0 +1,20 @@
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+
+fig, ax = plt.subplots()
+
+polygon = Polygon(
+    [(2, 2), (8, 2), (7, 7), (3, 6)],
+    closed=True,
+    fill=True,
+)
+
+ax.add_patch(polygon)
+
+ax.set_xlim(0, 10)
+ax.set_ylim(0, 10)
+ax.set_aspect("equal")
+ax.grid()
+
+plt.title("Flood Fill Polygon")
+plt.show()
