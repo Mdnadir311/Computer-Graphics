@@ -1,0 +1,28 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+p = np.array([[1,2,4,1],[1,4,1,1],[1,1,1,1]])
+
+T = [
+    np.eye(3),                         # Original
+    [[1,0,0],[0,-1,0],[0,0,1]],       # Reflection X
+    [[-1,0,0],[0,1,0],[0,0,1]],       # Reflection Y
+    [[1,1,0],[0,1,0],[0,0,1]],        # Shearing X
+    [[1,0,0],[1,1,0],[0,0,1]]         # Shearing Y
+]
+
+titles = ["Original","Reflection X","Reflection Y","Shearing X","Shearing Y"]
+
+fig, ax = plt.subplots(1,5,figsize=(15,3))
+
+for a,m,t in zip(ax,T,titles):
+    q = np.array(m) @ p
+    a.plot(q[0],q[1],'o-')
+    a.set_title(t)
+    a.grid()
+    a.axhline(0,color='black')
+    a.axvline(0,color='black')
+    a.set_aspect('equal')
+
+plt.tight_layout()
+plt.show()
