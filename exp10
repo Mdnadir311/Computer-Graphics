@@ -1,0 +1,33 @@
+import matplotlib.pyplot as plt
+
+poly = [(1, 1), (9, 2), (8, 7), (4, 9), (2, 6)]
+w = (2, 2, 8, 7) 
+
+def clip(p, in_fn, int_fn):
+    res, s = [], p[-1]
+    for pt in p:
+        if in_fn(pt):
+            if not in_fn(s): res.append(int_fn(s, pt))
+            res.append(pt)
+        elif in_fn(s): res.append(int_fn(s, pt))
+        s = pt
+    return res
+
+c = poly
+c = clip(c, lambda p: p[0] >= w[0], lambda s, p: (w[0], s[1] + (p[1] - s[1]) * (w[0] - s[0]) / (p[0] - s[0])))
+c = clip(c, lambda p: p[0] <= w[2], lambda s, p: (w[2], s[1] + (p[1] - s[1]) * (w[2] - s[0]) / (p[0] - s[0])))
+c = clip(c, lambda p: p[1] >= w[1], lambda s, p: (s[0] + (p[0] - s[0]) * (w[1] - s[1]) / (p[1] - s[1]), w[1]))
+c = clip(c, lambda p: p[1] <= w[3], lambda s, p: (s[0] + (p[0] - s[0]) * (w[3] - s[1]) / (p[1] - s[1]), w[3]))
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
+ax1.plot(*zip(*(poly + [poly[0]])), 'b-o')
+ax1.set_title("Original Polygon")
+
+ax2.plot([w[0], w[2], w[2], w[0], w[0]], [w[1], w[1], w[3], w[3], w[1]], 'r--')
+ax2.plot(*zip(*(c + [c[0]])), 'k-o', antialiased=True)
+ax2.set_title("Sutherland-Hodgman + Antialiasing")
+
+for ax in (ax1, ax2): ax.grid(True); ax.set_aspect('equal')
+
+plt.tight_layout()
+plt.show()
