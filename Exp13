@@ -1,0 +1,44 @@
+import math
+import pygame
+
+pygame.init()
+
+width, height = 800, 600
+screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Animated transformation")
+
+clock = pygame.time.Clock()
+
+angle = 0
+x = 400
+y = 300
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    screen.fill((255, 255, 255))
+
+    points = [(0, -80), (60, 60), (-60, 60)]
+
+    transformed = []
+
+    rad = math.radians(angle)
+
+    for px, py in points:
+       
+        nx = px * math.cos(rad) - py * math.sin(rad)
+        ny = px * math.sin(rad) + py * math.cos(rad)
+       
+        transformed.append((nx + x, ny + y))
+
+    pygame.draw.polygon(screen, (0, 0, 255), transformed)
+
+    angle += 2
+
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
